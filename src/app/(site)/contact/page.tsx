@@ -94,11 +94,11 @@ export default async function ContactPage() {
 
           <div className="rounded-lg border border-line bg-surface/40 p-6">
             <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted-soft">
-              Response time
+              Before you send
             </p>
             <p className="mt-3 text-sm leading-relaxed text-muted">
-              Typically within two working days. Include a link to anything already in progress so
-              the reply can be specific.
+              Include a link to anything already in progress — a repository, a design file or a
+              short brief — so the reply can be specific rather than generic.
             </p>
           </div>
         </aside>

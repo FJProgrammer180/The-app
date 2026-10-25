@@ -14,7 +14,16 @@ export function SiteHero({
   settings: SiteSettings;
   media: HeroMedia;
 }) {
-  const { home, brand } = settings;
+  const { home, brand, about } = settings;
+
+  // Derived only from settings the owner controls — nothing is invented here.
+  const heroFacts = [
+    about.role ? { label: "Role", value: about.role } : null,
+    about.learning[0] ? { label: "Learning", value: about.learning[0] } : null,
+    about.skills.length > 0
+      ? { label: "Toolkit", value: about.skills.slice(0, 2).join(" · ") }
+      : null,
+  ].filter((fact): fact is { label: string; value: string } => fact !== null);
 
   return (
     <section
@@ -71,23 +80,21 @@ export function SiteHero({
             </Button>
           </div>
 
-          <dl
-            className="mt-12 grid max-w-md grid-cols-3 gap-4 border-t border-line/80 pt-6 animate-fade-up"
-            style={{ animationDelay: "440ms" }}
-          >
-            {[
-              { label: "Focus", value: "Systems & AI" },
-              { label: "Practice", value: "Design engineering" },
-              { label: "Status", value: "Open to work" },
-            ].map((item) => (
-              <div key={item.label}>
-                <dt className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-soft">
-                  {item.label}
-                </dt>
-                <dd className="mt-1.5 text-[0.8rem] text-foreground/85">{item.value}</dd>
-              </div>
-            ))}
-          </dl>
+          {heroFacts.length > 0 ? (
+            <dl
+              className="mt-12 grid max-w-md grid-cols-3 gap-4 border-t border-line/80 pt-6 animate-fade-up"
+              style={{ animationDelay: "440ms" }}
+            >
+              {heroFacts.map((item) => (
+                <div key={item.label}>
+                  <dt className="font-mono text-[0.6rem] uppercase tracking-[0.18em] text-muted-soft">
+                    {item.label}
+                  </dt>
+                  <dd className="mt-1.5 text-[0.8rem] text-foreground/85">{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
         </div>
 
         <div className="relative order-first h-[38svh] w-full lg:order-last lg:col-span-5 lg:h-[74svh] xl:col-span-6">

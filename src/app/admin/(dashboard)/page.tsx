@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, FolderKanban, Images, Mail, Plus } from "lucide-react";
+import { ArrowRight, BookOpen, FolderKanban, Images, Mail, Plus, Settings } from "lucide-react";
 
 import { AdminPageHeader, StatCard, StatusBadge } from "@/components/admin/page-parts";
 import { Button } from "@/components/ui/button";
@@ -210,7 +210,7 @@ export default async function AdminOverviewPage() {
               { href: "/admin/posts/new", label: "Write an article", icon: BookOpen },
               { href: "/admin/projects/new", label: "Add a project", icon: FolderKanban },
               { href: "/admin/media", label: "Upload media", icon: Images },
-              { href: "/admin/settings", label: "Edit site copy", icon: Images },
+              { href: "/admin/settings", label: "Edit site copy", icon: Settings },
             ].map((action) => {
               const Icon = action.icon;
               return (
