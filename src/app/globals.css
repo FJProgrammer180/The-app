@@ -1,0 +1,354 @@
+@import "tailwindcss";
+
+@theme {
+  /* NEXORA palette — near-black ground, off-white type, restrained cyan accent */
+  --color-background: #080a0f;
+  --color-background-soft: #0b0e14;
+  --color-surface: #0e131b;
+  --color-surface-2: #131a24;
+  --color-line: #1c2431;
+  --color-line-strong: #29323f;
+  --color-foreground: #eef2f8;
+  --color-muted: #9aa7b8;
+  --color-muted-soft: #6d7a8c;
+  --color-accent: #64e3f0;
+  --color-accent-strong: #22c9dd;
+  --color-accent-soft: #133038;
+  --color-violet: #a78bfa;
+  --color-danger: #f87171;
+  --color-success: #4ade80;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", "Cascadia Mono",
+    Menlo, monospace;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --text-display: clamp(2.6rem, 6.2vw, 5.6rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.035em;
+  --text-title: clamp(2rem, 4vw, 3.4rem);
+  --text-title--line-height: 1.04;
+  --text-title--letter-spacing: -0.03em;
+  --text-heading: clamp(1.35rem, 2.2vw, 1.9rem);
+  --text-heading--line-height: 1.2;
+  --text-heading--letter-spacing: -0.02em;
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.1;
+  --text-label--letter-spacing: 0.18em;
+
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.6s ease both;
+  --animate-shimmer: shimmer 1.8s linear infinite;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-accent) 32%, transparent);
+    color: #080a0f;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-background);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border-radius: 999px;
+    border: 2px solid var(--color-background);
+  }
+}
+
+@utility text-balance-pretty {
+  text-wrap: pretty;
+}
+
+/* Editorial article typography. Scoped so admin previews and public posts agree. */
+@layer components {
+  .article-body {
+    color: color-mix(in oklab, var(--color-foreground) 88%, var(--color-muted));
+    font-size: 1.0625rem;
+    line-height: 1.78;
+    letter-spacing: -0.003em;
+  }
+
+  .article-body > * + * {
+    margin-top: 1.35em;
+  }
+
+  .article-body h2 {
+    margin-top: 2.4em;
+    margin-bottom: 0.6em;
+    font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-foreground);
+    scroll-margin-top: 6rem;
+  }
+
+  .article-body h3 {
+    margin-top: 1.9em;
+    margin-bottom: 0.4em;
+    font-size: 1.2rem;
+    line-height: 1.35;
+    color: var(--color-foreground);
+    scroll-margin-top: 6rem;
+  }
+
+  .article-body h1,
+  .article-body h4,
+  .article-body h5,
+  .article-body h6 {
+    color: var(--color-foreground);
+    font-weight: 600;
+    margin-top: 1.8em;
+  }
+
+  .article-body p {
+    margin-block: 1.35em;
+  }
+
+  .article-body a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 150ms ease;
+  }
+
+  .article-body a:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  .article-body strong {
+    color: var(--color-foreground);
+    font-weight: 600;
+  }
+
+  .article-body ul,
+  .article-body ol {
+    padding-left: 1.35rem;
+    margin-block: 1.35em;
+  }
+
+  .article-body ul {
+    list-style: disc;
+  }
+
+  .article-body ol {
+    list-style: decimal;
+  }
+
+  .article-body li {
+    margin-block: 0.45em;
+    padding-left: 0.2rem;
+  }
+
+  .article-body li::marker {
+    color: var(--color-muted-soft);
+  }
+
+  .article-body blockquote {
+    border-left: 2px solid var(--color-accent);
+    padding: 0.15rem 0 0.15rem 1.15rem;
+    color: var(--color-muted);
+    font-style: italic;
+  }
+
+  .article-body code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-line);
+    border-radius: 5px;
+    padding: 0.12em 0.4em;
+    color: color-mix(in oklab, var(--color-accent) 60%, var(--color-foreground));
+  }
+
+  .article-body pre {
+    background: #070a10;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.2rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.65;
+  }
+
+  .article-body pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: inherit;
+    color: #dbe6f5;
+  }
+
+  .article-body img {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-line);
+    max-width: 100%;
+    height: auto;
+  }
+
+  .article-body hr {
+    border: 0;
+    border-top: 1px solid var(--color-line);
+    margin-block: 2.5em;
+  }
+
+  .article-body table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.94rem;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .article-body th,
+  .article-body td {
+    border: 1px solid var(--color-line);
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+  }
+
+  .article-body th {
+    background: var(--color-surface);
+    color: var(--color-foreground);
+    font-weight: 600;
+  }
+
+  .article-body input[type="checkbox"] {
+    margin-right: 0.5rem;
+    accent-color: var(--color-accent);
+  }
+
+  .article-body :where(h2, h3, h4) a {
+    text-decoration: none;
+  }
+}
+
+/* Grain + vignette used behind the hero. Purely decorative, pointer-events none. */
+.hero-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+.hairline-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: radial-gradient(ellipse at 50% 0%, black 15%, transparent 78%);
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 25%,
+    var(--color-surface-2) 37%,
+    var(--color-surface) 63%
+  );
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
