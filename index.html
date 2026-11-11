@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The-app · 1.5B Coding AI</title>
+  <meta name="description" content="The-app — a coding assistant powered by a ~1.5B-parameter code model (Qwen2.5-Coder-1.5B class), backed by Supabase." />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="preconnect" href="https://jutaiicmkdewlkrareqn.supabase.co" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+
+    <!-- ══════════ Sidebar ══════════ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img src="assets/logo.png" alt="The-app logo" class="brand-logo" />
+        <div class="brand-text">
+          <span class="brand-name">The-app</span>
+          <span class="brand-tag"><span class="param-badge">1.5B</span> coding AI</span>
+        </div>
+      </div>
+
+      <button class="new-chat-btn" id="newChatBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        New chat
+      </button>
+
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="chatSearch" placeholder="Search chats…" autocomplete="off" />
+      </div>
+
+      <nav class="conversation-list" id="conversationList" aria-label="Conversations"></nav>
+
+      <div class="sidebar-footer">
+        <button class="model-card" id="modelCardBtn" title="About this model">
+          <div class="model-card-icon">⌘</div>
+          <div class="model-card-info">
+            <span class="model-card-name">Qwen2.5-Coder-1.5B</span>
+            <span class="model-card-meta">1.54B parameters · Apache-2.0</span>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ══════════ Main ══════════ -->
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn hamburger" id="hamburgerBtn" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <div class="topbar-title">
+          <h1 id="conversationTitle">New conversation</h1>
+          <span class="topbar-sub">via Supabase Edge Function → Qwen2.5-Coder-1.5B-Instruct</span>
+        </div>
+        <div class="status-pill" id="statusPill" title="Persistence status">
+          <span class="status-dot"></span>
+          <span class="status-text">Connecting…</span>
+        </div>
+        <button class="icon-btn" id="clearChatBtn" title="Clear current chat" aria-label="Clear current chat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </header>
+
+      <!-- Chat scroll area -->
+      <div class="chat-scroll" id="chatScroll">
+        <div class="chat-inner" id="chatInner">
+
+          <!-- Welcome / hero -->
+          <section class="welcome" id="welcomeScreen">
+            <div class="welcome-glow"></div>
+            <div class="welcome-badge"><span class="pulse-dot"></span> 1.5B-parameter model, live</div>
+            <h2 class="welcome-title">Ship code <span class="grad-text">faster</span>.</h2>
+            <p class="welcome-sub">Ask for reviews, fixes, regexes, SQL, explanations — answered by a compact 1.5-billion-parameter code model running behind this app.</p>
+            <div class="suggestion-grid">
+              <button class="suggestion-chip" data-prompt="Review this code and point out bugs:&#10;&#10;```js&#10;function sum(a, b) { return a + b; }&#10;console.log(sum('1', 2));&#10;```">
+                <span class="chip-icon">🐛</span><span class="chip-text"><strong>Review my code</strong><small>Find bugs &amp; bad practices</small></span>
+              </button>
+              <button class="suggestion-chip" data-prompt="Write a SQL query to get the top 10 users by order count from tables users(id, name) and orders(id, user_id, created_at).">
+                <span class="chip-icon">🗄️</span><span class="chip-text"><strong>Write SQL</strong><small>Joins, CTEs, window functions</small></span>
+              </button>
+              <button class="suggestion-chip" data-prompt="Explain how JavaScript closures work, with two short examples and a common pitfall.">
+                <span class="chip-icon">🧠</span><span class="chip-text"><strong>Explain a concept</strong><small>Plain-English + examples</small></span>
+              </button>
+              <button class="suggestion-chip" data-prompt="Write a Python function that retries an HTTP request with exponential backoff, with type hints and docstring.">
+                <span class="chip-icon">🐍</span><span class="chip-text"><strong>Generate a function</strong><small>Python, TS, Go, Rust…</small></span>
+              </button>
+            </div>
+          </section>
+
+          <!-- Messages render here -->
+          <div id="messages"></div>
+        </div>
+      </div>
+
+      <!-- Composer -->
+      <footer class="composer-wrap">
+        <div class="typing-indicator" id="typingIndicator" hidden>
+          <span></span><span></span><span></span> The 1.5B model is thinking…
+        </div>
+        <form class="composer" id="composerForm">
+          <textarea id="composerInput" rows="1" placeholder="Ask your 1.5B coding AI anything…  (Enter to send · Shift+Enter for newline)" aria-label="Message"></textarea>
+          <button type="button" class="stop-btn" id="stopBtn" hidden aria-label="Stop generating">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="7" y="7" width="10" height="10" rx="1.5"/></svg>
+          </button>
+          <button type="submit" class="send-btn" id="sendBtn" aria-label="Send message">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
+          </button>
+        </form>
+        <p class="composer-hint">Qwen2.5-Coder-1.5B-Instruct · 1.54B params · responses can be wrong — verify code before shipping.</p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- ══════════ Model info modal ══════════ -->
+  <div class="modal-backdrop" id="modelModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modelModalTitle">
+      <div class="modal-head">
+        <h3 id="modelModalTitle">About the 1.5B model</h3>
+        <button class="icon-btn" id="closeModelModal" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="spec-grid">
+          <div class="spec"><span class="spec-label">Model</span><span class="spec-value">Qwen2.5-Coder-1.5B-Instruct</span></div>
+          <div class="spec"><span class="spec-label">Parameters</span><span class="spec-value">1.54 billion</span></div>
+          <div class="spec"><span class="spec-label">Architecture</span><span class="spec-value">28 layers · GQA · RoPE · SwiGLU</span></div>
+          <div class="spec"><span class="spec-label">Context</span><span class="spec-value">32,768 tokens</span></div>
+          <div class="spec"><span class="spec-label">License</span><span class="spec-value">Apache-2.0</span></div>
+          <div class="spec"><span class="spec-label">Serving</span><span class="spec-value">Supabase Edge Function → LLM router</span></div>
+        </div>
+        <h4>How it is wired</h4>
+        <ol class="how-list">
+          <li>Your message goes to the <code>code-assistant</code> Supabase Edge Function.</li>
+          <li>The function prepends a coding system prompt and forwards the chat to the model.</li>
+          <li>Tokens stream back token-by-token over SSE.</li>
+          <li>Messages are persisted in your Supabase project (<code>ai_conversations</code> / <code>ai_messages</code>).</li>
+        </ol>
+        <h4>Upgrade to the real weights (optional)</h4>
+        <p class="modal-note">By default the app uses a free, anonymous text API so it works instantly. To run the genuine <strong>Qwen2.5-Coder-1.5B-Instruct</strong> weights, create a free Hugging Face token, then in Supabase go to <em>Edge Functions → Secrets</em> and add <code>HF_TOKEN</code> = your token (optionally <code>AI_MODEL</code>). Redeploy happens automatically — no code change.</p>
+        <div class="modal-actions">
+          <button class="danger-btn" id="clearAllChatsBtn">Delete all my chats</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
