@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ATLAS OS — From Intent to Verified Execution</title><link rel="stylesheet" href="style.css"></head><body>
+<header class="top"><div class="logo">ATLAS<span>OS</span></div>
+<span class="pill mono" id="conn">● API</span><span class="muted small" id="who"></span>
+<span style="flex:1"></span><button class="btn ghost hidden" id="logoutBtn">Logout</button></header>
+
+<section id="landing">
+  <div class="hero"><div class="tag">AUTONOMOUS PERSONAL WORK INTELLIGENCE</div>
+  <h1>ATLAS <span>OS</span></h1><p class="tag">FROM INTENT TO VERIFIED EXECUTION</p>
+  <p class="muted" style="max-width:640px;margin:18px auto">Give ATLAS a goal. It plans, runs only registered backend tools under a server-side policy engine, pauses for your approval on consequential actions, verifies every result — and shows you the evidence.</p>
+  <button class="btn" onclick="showAuth()">Launch Mission Control →</button></div>
+  <main><div class="card"><h3>Autonomous workflow</h3><div class="flow"><span>INTENT</span>→<span>PLAN</span>→<span>POLICY CHECK</span>→<span>TOOL EXECUTION</span>→<span>APPROVAL (RISK 2)</span>→<span>VERIFICATION</span>→<span>ARTIFACT</span></div></div>
+  <div class="grid">
+    <div class="card"><h3>🔐 Human approval</h3><p class="muted small">Risk-2 actions (email, deletion, external writes) pause before executing. Approvals are bound to the exact argument hash, expire in 15 minutes, and are single-use.</p></div>
+    <div class="card"><h3>🧰 Tool registry</h3><p class="muted small">Only typed, registered backend tools can run — no shell, no arbitrary code. Every call is schema-validated, persisted, and verified by read-after-write.</p></div>
+    <div class="card"><h3>📜 Live evidence</h3><p class="muted small">Execution events stream from the backend over SSE and survive refresh. Nothing is marked done until the persisted record proves it.</p></div>
+  </div>
+  <div class="card hidden" id="authCard"><h3>Login / Register</h3>
+    <label>Email</label><input id="email" type="email" placeholder="you@example.com">
+    <label>Password (min 8 chars)</label><input id="password" type="password">
+    <div style="margin-top:14px;display:flex;gap:10px"><button class="btn" onclick="doAuth('login')">Login</button><button class="btn ghost" onclick="doAuth('register')">Register</button></div>
+    <p class="muted small">Registration also creates your first workspace.</p></div></main>
+</section>
+
+<section id="app" class="hidden"><div class="layout">
+<nav class="side" id="sideNav">
+  <button data-view="mission" class="active">⌖ Mission Control</button>
+  <button data-view="workspace">▶ Agent Workspace</button>
+  <button data-view="approvals">⚠ Approval Center <span class="pill" id="apprCount">0</span></button>
+  <button data-view="tools">🧰 Tool Registry</button>
+  <button data-view="memory">🧠 Memory Vault</button>
+  <button data-view="artifacts">📦 Artifacts</button>
+  <button data-view="logs">📜 Activity Logs</button>
+  <button data-view="settings">⚙ Settings</button>
+  <label>Workspace</label><select id="wsSelect"></select>
+  <button class="btn ghost" onclick="newWorkspace()">+ New workspace</button>
+</nav>
+<main id="main"></main></div></section>
+<div id="toast"></div><script src="app.js"></script></body></html>
